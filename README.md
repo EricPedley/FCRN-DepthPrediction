@@ -1,3 +1,10 @@
+I followed [this article](https://www.tensorflow.org/guide/migrate) to convert the code from tensorflow v1 to v2.
+
+To run the model you need to download the model's weights from [here](http://campar.in.tum.de/files/rupprecht/depthpred/NYU_FCRN-checkpoint.zip) and extract it into the tensorflow folder
+then run <code>predict.py NYU_FCRN-checkpoint/NYU_FCRN.ckpt \**the path to your image*\*</code>
+For some reason PNG's don't work. I tried it with jpeg files and those do work.
+    
+
 # Deeper Depth Prediction with Fully Convolutional Residual Networks
 
 By [Iro Laina](http://campar.in.tum.de/Main/IroLaina), [Christian Rupprecht](http://campar.in.tum.de/Main/ChristianRupprecht), [Vasileios Belagiannis](http://www.robots.ox.ac.uk/~vb/), [Federico Tombari](http://campar.in.tum.de/Main/FedericoTombari), [Nassir Navab](http://campar.in.tum.de/Main/NassirNavab).
