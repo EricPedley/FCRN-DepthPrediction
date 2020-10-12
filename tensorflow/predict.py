@@ -5,8 +5,7 @@ import tensorflow as tf
 from matplotlib import pyplot as plt
 from PIL import Image
 
-import models
-
+import fcrn as models
 def predict(model_data_path, image_path):
 
     
@@ -23,18 +22,19 @@ def predict(model_data_path, image_path):
     img = np.expand_dims(np.asarray(img), axis = 0)
    
     # Create a placeholder for the input image
-    input_node = tf.placeholder(tf.float32, shape=(None, height, width, channels))
+    tf.compat.v1.disable_eager_execution()
+    input_node = tf.compat.v1.placeholder(tf.float32, shape=(None, height, width, channels))
 
     # Construct the network
     net = models.ResNet50UpProj({'data': input_node}, batch_size, 1, False)
         
-    with tf.Session() as sess:
+    with tf.compat.v1.Session() as sess:
 
         # Load the converted parameters
         print('Loading the model')
 
         # Use to load from ckpt file
-        saver = tf.train.Saver()     
+        saver = tf.compat.v1.train.Saver()     
         saver.restore(sess, model_data_path)
 
         # Use to load from npy file

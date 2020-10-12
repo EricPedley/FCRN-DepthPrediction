@@ -83,10 +83,10 @@ class Network(object):
         '''
         data_dict = np.load(data_path, encoding='latin1').item()
         for op_name in data_dict: 
-            with tf.variable_scope(op_name, reuse=True):
+            with tf.compat.v1.variable_scope(op_name, reuse=True):
                 for param_name, data in iter(data_dict[op_name].items()):      
                     try:
-                        var = tf.get_variable(param_name)
+                        var = tf.compat.v1.get_variable(param_name)
                         session.run(var.assign(data))
 
                     except ValueError:
@@ -124,7 +124,7 @@ class Network(object):
 
     def make_var(self, name, shape):
         '''Creates a new TensorFlow variable.'''
-        return tf.get_variable(name, shape, dtype = 'float32', trainable=self.trainable)
+        return tf.compat.v1.get_variable(name, shape, dtype = 'float32', trainable=self.trainable)
 
     def validate_padding(self, padding):
         '''Verifies that the padding is one of the supported ones.'''
@@ -158,7 +158,7 @@ class Network(object):
         # Convolution for a given input and kernel
         convolve = lambda i, k: tf.nn.conv2d(i, k, [1, s_h, s_w, 1], padding='VALID')
         
-        with tf.variable_scope(name) as scope:
+        with tf.compat.v1.variable_scope(name) as scope:
             kernel = self.make_var('weights', shape=[k_h, k_w, c_i // group, c_o])
 
             if group == 1:
@@ -224,7 +224,7 @@ class Network(object):
 
     @layer
     def fc(self, input_data, num_out, name, relu=True):
-        with tf.variable_scope(name) as scope:
+        with tf.compat.v1.variable_scope(name) as scope:
             input_shape = input_data.get_shape()
             if input_shape.ndims == 4:
                 # The input is spatial. Vectorize it first.
@@ -256,15 +256,15 @@ class Network(object):
     @layer
     def batch_normalization(self, input_data, name, scale_offset=True, relu=False):
 
-        with tf.variable_scope(name) as scope:
+        with tf.compat.v1.variable_scope(name) as scope:
             shape = [input_data.get_shape()[-1]]
-            pop_mean = tf.get_variable("mean", shape, initializer = tf.constant_initializer(0.0), trainable=False)
-            pop_var = tf.get_variable("variance", shape, initializer = tf.constant_initializer(1.0), trainable=False)
+            pop_mean = tf.compat.v1.get_variable("mean", shape, initializer = tf.constant_initializer(0.0), trainable=False)
+            pop_var = tf.compat.v1.get_variable("variance", shape, initializer = tf.constant_initializer(1.0), trainable=False)
             epsilon = 1e-4
             decay = 0.999
             if scale_offset:
-                scale = tf.get_variable("scale", shape, initializer = tf.constant_initializer(1.0))
-                offset = tf.get_variable("offset", shape, initializer = tf.constant_initializer(0.0))
+                scale = tf.compat.v1.get_variable("scale", shape, initializer = tf.constant_initializer(1.0))
+                offset = tf.compat.v1.get_variable("offset", shape, initializer = tf.constant_initializer(0.0))
             else:
                 scale, offset = (None, None)
             if self.is_training:
