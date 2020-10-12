@@ -1,11 +1,12 @@
 import argparse
 import os
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 from matplotlib import pyplot as plt
 from PIL import Image
 
 import fcrn as models
+tf.disable_v2_behavior()
 def predict(model_data_path, image_path):
 
     
@@ -22,19 +23,18 @@ def predict(model_data_path, image_path):
     img = np.expand_dims(np.asarray(img), axis = 0)
    
     # Create a placeholder for the input image
-    tf.compat.v1.disable_eager_execution()
-    input_node = tf.compat.v1.placeholder(tf.float32, shape=(None, height, width, channels))
+    input_node = tf.placeholder(tf.float32, shape=(None, height, width, channels))
 
     # Construct the network
     net = models.ResNet50UpProj({'data': input_node}, batch_size, 1, False)
         
-    with tf.compat.v1.Session() as sess:
+    with tf.Session() as sess:
 
         # Load the converted parameters
         print('Loading the model')
 
         # Use to load from ckpt file
-        saver = tf.compat.v1.train.Saver()     
+        saver = tf.train.Saver()     
         saver.restore(sess, model_data_path)
 
         # Use to load from npy file
